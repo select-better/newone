@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		#header img {
+			width: 100%;
+		}
+
+		#nav img {
+			display: block;
+			width: 100%;
+		}
+
+		#part {
+			width: 100%;
+			height: 419px;
+		}
+
+		#part .partCon {
+			width: 820px;
+			height: 419px;
+			margin: 0 auto;
+		}
+
+		#part .partCon .left {
+			float: left;
+		}
+
+		#part .partCon .right {
+			float: right;
+		}
+
+		#part .partCon .banner {
+			float: left;
+			width: 820px;
+			height: 419px;
+			position: relative;
+		}
+
+		#part .partCon .banner a {
+			width: 71px;
+			height: 71px;
+			display: none;
+			position: absolute;
+			top: 180px;
+			z-index: 2;
+		}
+
+		#part .partCon .banner a.prev {
+			left: -35px;
+			background: url(img/but.png) -71px 0px;
+
+		}
+
+		#part .partCon .banner a.prev:hover {
+			background-position: 0 0;
+		}
+
+		#part .partCon .banner a.next {
+			right: -35px;
+			background: url(img/but.png) -71px -71px;
+		}
+
+		#part .partCon .banner a.next:hover {
+			background-position: 0 -71px;
+		}
+
+		#part .partCon .banner .scroll {
+			width: 820px;
+			height: 419px;
+			background: #abcdef;
+			position: relative;
+			overflow: hidden;
+		}
+
+		#part .partCon .banner .scroll img {
+			position: absolute;
+			left: 820px;
+		}
+
+		#part .partCon .banner .scroll img.first {
+			left: 0;
+		}
+
+		#part .partCon .banner .btn {
+			width: 150px;
+			height: 20px;
+			position: absolute;
+			background: rgba(0, 0, 0, 0.5);
+			left: 340px;
+			bottom: 10px;
+			border-radius: 20px;
+			text-align: center;
+		}
+
+		#part .partCon .banner .btn span {
+			width: 10px;
+			height: 10px;
+			background: #666;
+			border-radius: 5px;
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		#part .partCon .banner .btn span.hover {
+			background: #ff0099;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="part">
+		<div class="partCon">
+			<div class="banner">
+				<a href="javascript:void(0)" class="prev"></a>
+				<a href="javascript:void(0)" class="next"></a>
+				<div class="scroll">
+					<img class="first" src="img/flash1.jpg" />
+					<img src="img/flash2.jpg" />
+					<img src="img/flash3.jpg" />
+					<img src="img/flash4.jpg" />
+					<img src="img/flash5.png" />
+					<img src="img/flash6.jpg" />
+				</div>
+				<div class="btn">
+					<span class="hover"></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
+	<script>
+		//混合开发
+		function shopCity() {
+			this.$span = $('.btn span');
+			this.$pic = $('.scroll img')
+			this.$prev = 0; //用两个变量存储两项，前后的索引
+			this.$next = 0;
+
+			//banner
+			this.$banner = $('.banner');
+			this.$right = $('.banner .next');
+			this.$left = $('.banner .prev');
+
+		}
+		shopCity.prototype.init = function () {
+			let _this = this;
+			//开始点击最下面变色
+			this.$span.on('click', function () {
+				_this.$next = $(this).index();
+			
+				//原来的往左移，后面的往左移
+                   _this.judge();
+
+			
+			})
+
+			// 放上去的时候，两个箭头出现
+			this.$banner.hover(function () {
+				//    alert(1)
+				$('.next,.prev').show();
+			}, function () {
+				$('.next,.prev').hide();
+			})
+            // 右边按钮
+			this.$left.on('click',function(){
+				_this.$next--;
+				_this.judge();
+				// if(_this.$next<0){
+				// 	_this.$next=5;
+				// 	_this.$prev=0;
+				// }
+				
+				// _this.$span.eq(_this.$next).addClass('hover').siblings().removeClass('hover');
+
+				// _this.$pic.eq(_this.$prev).animate({
+				// 	left: 820
+				// })
+				// _this.$pic.eq(_this.$next).css({ left: -820 }).animate({
+				// 	left: 0
+				// });
+				// _this.$prev=_this.$next;
+			})
+            //左边按钮
+			this.$right.on('click',function(){
+				_this.$next++;
+				// if(_this.$next>5){
+				// 	_this.$next=0;
+				// 	_this.$prev=5;
+				// }
+				
+				// _this.$span.eq(_this.$next).addClass('hover').siblings().removeClass('hover');
+
+				// _this.$pic.eq(_this.$prev).animate({
+				// 	left: -820
+				// })
+				// _this.$pic.eq(_this.$next).css({ left: 820 }).animate({
+				// 	left: 0
+				// });
+				_this.judge();
+				// _this.$prev=_this.$next;
+			})
+		}
+		shopCity.prototype.judge = function () {
+			if (this.$next > this.$prev) {
+				if(this.$next>5){  //考虑超出范围的情况,即一直往右按
+					this.$next=0;
+					// this.$prev=5;   // 可以不写，因为先前已经将退后$next
+				}
+				// 右边移动
+				this.$pic.eq(this.$prev).animate({         
+					left: -820
+				})
+				this.$pic.eq(this.$next).css({ left: 820 }).animate({
+					left: 0
+				});
+			} else if (this.$next < this.$prev) {
+				if(this.$next<0){   //考虑一直向左边运行
+					this.$next=5;
+					// _this.$prev=0;   // 可以不写
+				}
+				//左边移动
+				this.$pic.eq(this.$prev).animate({
+					left: 820
+				})
+				this.$pic.eq(this.$next).css({ left: -820 }).animate({
+					left: 0
+				});
+			}
+			this.$span.eq(this.$next).addClass('hover').siblings().removeClass('hover');  //控制点的运行
+			this.$prev = this.$next;    // 赋值后可以恢复正常
+		}
+		new shopCity().init();
+	</script>
+</body>
+
+</html>
