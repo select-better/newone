@@ -1,4 +1,4 @@
-1. 当使用 position： sticky 时候，当外面的box实用了 overflow： auto
+1. 当使用 position： sticky 时候，当外面的box实用了 overflow： auto.  overflow: hidden;
    就会将 外面使用的作为 html一样 作为标准， 以他为相对位置
    <div style={{overflow: 'auto', padding: '20px;}}><div style={{ position: 'sticky', top: '0px'}}></div></div>
    里面的div往上移动时候，是以外面的div边框位置为准
