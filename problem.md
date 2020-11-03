@@ -10,3 +10,4 @@
 4. 当获取元素用 offsetTop这些获取不到元素的实际位置 始终是0的时候
   考虑使用 getBoundingClientRect（） 这个方法 获取的 x, y 就是元素的相对位置
   像上面这样，在外面的props也有onChange，就会也会触发这个onChange，里面的div也会有这样的， 这样导致往外传的值也不确定， 也会出现问题的。
+5. button 这种的加上after的伪类会失效
